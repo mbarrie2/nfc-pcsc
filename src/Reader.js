@@ -29,7 +29,7 @@ export const CONNECT_MODE_CARD = 'CONNECT_MODE_CARD';
 
 
 class Reader extends EventEmitter {
-
+	
 	reader = null;
 	logger = null;
 
@@ -569,7 +569,7 @@ class Reader extends EventEmitter {
 		}
 
 		this.logger.debug('writing data to card', this.card);
-
+		console.log(data.length + ' --- ' + blockSize);
 		if (data.length < blockSize || data.length % blockSize !== 0) {
 			throw new WriteError('invalid_data_length', 'Invalid data length. You can only update the entire data block(s).');
 		}
@@ -589,7 +589,7 @@ class Reader extends EventEmitter {
 
 				const part = data.slice(start, end);
 
-				// console.log(i, block, start, end, part);
+				console.log(i, block, start, end, part);
 
 				commands.push(this.write(block, part, blockSize));
 
@@ -597,7 +597,7 @@ class Reader extends EventEmitter {
 
 			return Promise.all(commands)
 				.then(values => {
-					// console.log(values);
+					console.log(values);
 					return values;
 				});
 
@@ -617,7 +617,7 @@ class Reader extends EventEmitter {
 		let response = null;
 
 		try {
-
+			console.log(packet);
 			response = await this.transmit(packet, 2);
 
 		} catch (err) {
@@ -654,7 +654,7 @@ class Reader extends EventEmitter {
 				return this.handle_Iso_14443_3_Tag();
 
 			case TAG_ISO_14443_4:
-				return this.handle_Iso_14443_4_Tag();
+				return this.handle_Iso_14443_3_Tag();
 
 			default:
 				return this.handle_Iso_14443_3_Tag();
